@@ -1,18 +1,12 @@
 import { Backlog } from 'backlog-js';
 import { TranslationHelper } from '../createTranslationHelper.js';
 import { ToolsetGroup } from '../types/toolsets.js';
-import { addIssueTool } from './addIssue.js';
-import { addIssueCommentTool } from './addIssueComment.js';
-import { addProjectTool } from './addProject.js';
-import { addPullRequestTool } from './addPullRequest.js';
-import { addPullRequestCommentTool } from './addPullRequestComment.js';
-import { addWikiTool } from './addWiki.js';
-import { updateWikiTool } from './updateWiki.js';
 import { countIssuesTool } from './countIssues.js';
-import { deleteIssueTool } from './deleteIssue.js';
-import { deleteProjectTool } from './deleteProject.js';
 import { getCategoriesTool } from './getCategories.js';
 import { getCustomFieldsTool } from './getCustomFields.js';
+import { getDocumentTool } from './getDocument.js';
+import { getDocumentTreeTool } from './getDocumentTree.js';
+import { getDocumentsTool } from './getDocuments.js';
 import { getGitRepositoriesTool } from './getGitRepositories.js';
 import { getGitRepositoryTool } from './getGitRepository.js';
 import { getIssueTool } from './getIssue.js';
@@ -32,32 +26,15 @@ import { getPullRequestsCountTool } from './getPullRequestsCount.js';
 import { getResolutionsTool } from './getResolutions.js';
 import { getSpaceTool } from './getSpace.js';
 import { getSpaceActivitiesTool } from './getSpaceActivities.js';
+import { getUserRecentUpdatesTool } from './getUserRecentUpdates.js';
 import { getUserStarsCountTool } from './getUserStarsCount.js';
 import { getUsersTool } from './getUsers.js';
-import { getUserRecentUpdatesTool } from './getUserRecentUpdates.js';
+import { getVersionMilestoneListTool } from './getVersionMilestoneList.js';
 import { getWatchingListCountTool } from './getWatchingListCount.js';
 import { getWatchingListItemsTool } from './getWatchingListItems.js';
-import { addWatchingTool } from './addWatching.js';
-import { updateWatchingTool } from './updateWatching.js';
-import { deleteWatchingTool } from './deleteWatching.js';
-import { markWatchingAsReadTool } from './markWatchingAsRead.js';
 import { getWikiTool } from './getWiki.js';
 import { getWikiPagesTool } from './getWikiPages.js';
 import { getWikisCountTool } from './getWikisCount.js';
-import { markNotificationAsReadTool } from './markNotificationAsRead.js';
-import { resetUnreadNotificationCountTool } from './resetUnreadNotificationCount.js';
-import { updateIssueTool } from './updateIssue.js';
-import { updateProjectTool } from './updateProject.js';
-import { updatePullRequestTool } from './updatePullRequest.js';
-import { updatePullRequestCommentTool } from './updatePullRequestComment.js';
-import { getDocumentTool } from './getDocument.js';
-import { getDocumentsTool } from './getDocuments.js';
-import { getDocumentTreeTool } from './getDocumentTree.js';
-import { getVersionMilestoneListTool } from './getVersionMilestoneList.js';
-import { addVersionMilestoneTool } from './addVersionMilestone.js';
-import { updateVersionMilestoneTool } from './updateVersionMilestone.js';
-import { deleteVersionTool } from './deleteVersion.js';
-import { addDocumentTool } from './addDocument.js';
 
 export const allTools = (
   backlog: Backlog,
@@ -67,8 +44,7 @@ export const allTools = (
     toolsets: [
       {
         name: 'space',
-        description:
-          'Tools for managing Backlog space settings and general information.',
+        description: 'Read-only tools for Backlog space information and users.',
         enabled: false,
         tools: [
           getSpaceTool(backlog, helper),
@@ -81,62 +57,43 @@ export const allTools = (
       },
       {
         name: 'project',
-        description:
-          'Tools for managing projects, categories, custom fields, and issue types.',
+        description: 'Read-only tools for projects, versions, categories, custom fields, and issue types.',
         enabled: false,
         tools: [
           getProjectListTool(backlog, helper),
-          addProjectTool(backlog, helper),
           getProjectTool(backlog, helper),
-          updateProjectTool(backlog, helper),
-          deleteProjectTool(backlog, helper),
+          getVersionMilestoneListTool(backlog, helper),
+          getCategoriesTool(backlog, helper),
+          getCustomFieldsTool(backlog, helper),
+          getIssueTypesTool(backlog, helper),
+          getPrioritiesTool(backlog, helper),
+          getResolutionsTool(backlog, helper),
         ],
       },
       {
         name: 'issue',
-        description: 'Tools for managing issues and their comments.',
+        description: 'Read-only tools for issues and their comments.',
         enabled: false,
         tools: [
           getIssueTool(backlog, helper),
           getIssuesTool(backlog, helper),
           countIssuesTool(backlog, helper),
-          addIssueTool(backlog, helper),
-          updateIssueTool(backlog, helper),
-          deleteIssueTool(backlog, helper),
           getIssueCommentsTool(backlog, helper),
-          addIssueCommentTool(backlog, helper),
-          getPrioritiesTool(backlog, helper),
-          getCategoriesTool(backlog, helper),
-          getCustomFieldsTool(backlog, helper),
-          getIssueTypesTool(backlog, helper),
-          getResolutionsTool(backlog, helper),
-          getWatchingListItemsTool(backlog, helper),
-          getWatchingListCountTool(backlog, helper),
-          addWatchingTool(backlog, helper),
-          updateWatchingTool(backlog, helper),
-          deleteWatchingTool(backlog, helper),
-          markWatchingAsReadTool(backlog, helper),
-          getVersionMilestoneListTool(backlog, helper),
-          addVersionMilestoneTool(backlog, helper),
-          updateVersionMilestoneTool(backlog, helper),
-          deleteVersionTool(backlog, helper),
         ],
       },
       {
         name: 'wiki',
-        description: 'Tools for managing wiki pages.',
+        description: 'Read-only tools for wiki pages.',
         enabled: false,
         tools: [
           getWikiPagesTool(backlog, helper),
-          getWikisCountTool(backlog, helper),
           getWikiTool(backlog, helper),
-          addWikiTool(backlog, helper),
-          updateWikiTool(backlog, helper),
+          getWikisCountTool(backlog, helper),
         ],
       },
       {
         name: 'git',
-        description: 'Tools for managing Git repositories and pull requests.',
+        description: 'Read-only tools for Git repositories and pull requests.',
         enabled: false,
         tools: [
           getGitRepositoriesTool(backlog, helper),
@@ -144,33 +101,28 @@ export const allTools = (
           getPullRequestsTool(backlog, helper),
           getPullRequestsCountTool(backlog, helper),
           getPullRequestTool(backlog, helper),
-          addPullRequestTool(backlog, helper),
-          updatePullRequestTool(backlog, helper),
           getPullRequestCommentsTool(backlog, helper),
-          addPullRequestCommentTool(backlog, helper),
-          updatePullRequestCommentTool(backlog, helper),
-        ],
-      },
-      {
-        name: 'document',
-        description: 'Tools for managing documents.',
-        enabled: false,
-        tools: [
-          getDocumentsTool(backlog, helper),
-          getDocumentTreeTool(backlog, helper),
-          getDocumentTool(backlog, helper),
-          addDocumentTool(backlog, helper),
         ],
       },
       {
         name: 'notifications',
-        description: 'Tools for managing user notifications.',
+        description: 'Read-only tools for notifications and watching.',
         enabled: false,
         tools: [
           getNotificationsTool(backlog, helper),
           getNotificationsCountTool(backlog, helper),
-          resetUnreadNotificationCountTool(backlog, helper),
-          markNotificationAsReadTool(backlog, helper),
+          getWatchingListItemsTool(backlog, helper),
+          getWatchingListCountTool(backlog, helper),
+        ],
+      },
+      {
+        name: 'document',
+        description: 'Read-only tools for documents.',
+        enabled: false,
+        tools: [
+          getDocumentsTool(backlog, helper),
+          getDocumentTool(backlog, helper),
+          getDocumentTreeTool(backlog, helper),
         ],
       },
     ],
