@@ -6,16 +6,75 @@
 
 [📘 日本語でのご利用ガイド](./README.ja.md)
 
-A Model Context Protocol (MCP) server for interacting with the Backlog API. This server provides tools for managing projects, issues, wiki pages, and more in Backlog through AI agents like Claude Desktop / Cline / Cursor etc.
+A Model Context Protocol (MCP) server for interacting with the Backlog API. This server provides tools for reading projects, issues, wiki pages, and more in Backlog through AI agents like Claude Desktop / Cline / Cursor etc.
+
+## About this fork
+
+> This fork is **read-only**. All write tools (`add*`, `update*`, `delete*`, `mark*`,
+> `resetUnreadNotificationCount`) have been removed from `src/tools/tools.ts`, so the
+> server cannot create, modify, or delete anything in Backlog. Every remaining tool
+> is a `get*` / `count*` read.
+
+### Team setup
+
+`build/` is gitignored, so you must build after cloning.
+
+```bash
+git clone git@github.com:ducpd-kozocom/backlog-mcp-server.git
+cd backlog-mcp-server
+npm install
+npm run build
+```
+
+Then add the server to your own `~/.claude.json` — use **your** clone path and
+**your own** API key:
+
+```json
+"backlog": {
+  "type": "stdio",
+  "command": "node",
+  "args": ["/your/path/backlog-mcp-server/build", "--enable-toolsets", "all"],
+  "env": {
+    "BACKLOG_DOMAIN": "your-space.backlog.com",
+    "BACKLOG_API_KEY": "<your own key>"
+  }
+}
+```
+
+Notes:
+
+- **Never commit or share API keys.** Backlog keys are per-user and per-space —
+  generate your own from Backlog → personal settings → API. `.env` is gitignored;
+  only `.env.example` is tracked.
+- Watch the TLD: `.backlog.com` and `.backlog.jp` are different hosts.
+- Env vars are read once when the MCP server process spawns. After editing
+  `~/.claude.json`, **restart your MCP client** or the old values stay live.
+- Quit Claude Code before editing `~/.claude.json` — it rewrites the file on exit
+  and will overwrite your changes.
+- To connect to more than one Backlog space at once, see
+  [Multi-Organization Support](#multi-organization-support) instead of swapping
+  `BACKLOG_DOMAIN` / `BACKLOG_API_KEY` back and forth.
+
+### Verifying your credentials
+
+Check the domain and key together before wiring them into the MCP config:
+
+```bash
+curl -s "https://your-space.backlog.com/api/v2/users/myself?apiKey=YOUR_KEY" \
+  | python3 -m json.tool
+```
+
+Your user JSON means both are good; `401` with `"code": 11` means a bad key.
 
 ## Features
 
-- Project tools (create, read, update, delete)
-- Issue tracking and comments (create, update, delete, list)
-- Version/Milestone management (create, read, update, delete)
-- Wiki page support
-- Git repository and pull request tools
-- Notification tools
+- Project tools (read)
+- Issue and comment tools (read, list, count)
+- Version/Milestone tools (read)
+- Wiki page support (read)
+- Git repository and pull request tools (read)
+- Notification tools (read)
+- Document tools (read)
 - GraphQL-style field selection for optimized responses
 - Token limiting for large responses
 
